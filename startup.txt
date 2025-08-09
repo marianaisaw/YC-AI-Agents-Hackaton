@@ -1,0 +1,137 @@
+import anthropic
+from config import ANTHROPIC_API_KEY, ANTHROPIC_MODEL, MAX_TOKENS, TEMPERATURE
+import json
+
+class StartupAnalyzer:
+    def __init__(self):
+        """Initialize the StartupAnalyzer with Anthropic client."""
+        self.client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+        self.model = ANTHROPIC_MODEL
+        
+    def analyze_startup(self, startup_prompt):
+        """
+        Analyze a startup prompt and return investors and competitors analysis.
+        
+        Args:
+            startup_prompt (str): Description of the startup idea
+            
+        Returns:
+            dict: Analysis containing investors and competitors
+        """
+        system_prompt = """You are an expert startup analyst and venture capital advisor. 
+        Your task is to analyze startup ideas and provide:
+        
+        1. **Investors Analysis**: 
+           - List 5-10 relevant venture capital firms, angel investors, or investment groups
+           - Include their investment focus, typical investment size, and why they'd be interested
+           - Focus on investors who typically invest in the startup's industry/space
+           - For each investor, identify 1-2 key contacts (partners, principals) who would be most relevant
+           - Include their LinkedIn profiles when possible and approach strategies
+        
+        2. **Competitors Analysis**:
+           - Identify 5-8 direct and indirect competitors
+           - Analyze their business models, strengths, and weaknesses
+           - Provide insights on market positioning and differentiation opportunities
+           - For each competitor, identify key executives (CEO, CTO, Head of Product, etc.)
+           - Include their backgrounds and why connecting with them might be valuable
+        
+        Format your response as a JSON object with the following structure:
+        {
+            "investors": [
+                {
+                    "name": "Investor Name",
+                    "focus": "Investment focus/industry",
+                    "investment_size": "Typical investment range",
+                    "why_interested": "Why this investor would be interested",
+                    "key_contacts": [
+                        {
+                            "name": "Partner/Principal Name",
+                            "role": "Their role at the firm",
+                            "focus": "Their specific investment focus",
+                            "linkedin": "LinkedIn profile URL if available",
+                            "approach": "Best way to approach them"
+                        }
+                    ]
+                }
+            ],
+            "competitors": [
+                {
+                    "name": "Competitor Name",
+                    "business_model": "How they make money",
+                    "strengths": ["Strength 1", "Strength 2"],
+                    "weaknesses": ["Weakness 1", "Weakness 2"],
+                    "differentiation": "How the startup can differentiate",
+                    "key_people": [
+                        {
+                            "name": "Executive Name",
+                            "role": "Their position",
+                            "background": "Brief background",
+                            "linkedin": "LinkedIn profile URL if available",
+                            "why_contact": "Why you might want to connect with them"
+                        }
+                    ]
+                }
+            ],
+            "market_insights": "Brief analysis of market opportunity and positioning"
+        }
+        
+        Be specific, actionable, and provide real investor names and competitor companies."""
+        
+        user_prompt = f"""Please analyze this startup idea and provide investors and competitors analysis:
+
+Startup Description: {startup_prompt}
+
+Please provide a comprehensive analysis in the specified JSON format."""
+        
+        try:
+            response = self.client.messages.create(
+                model=self.model,
+                max_tokens=MAX_TOKENS,
+                temperature=TEMPERATURE,
+                system=system_prompt,
+                messages=[
+                    {"role": "user", "content": user_prompt}
+                ]
+            )
+            
+            # Extract the content from the response
+            content = response.content[0].text
+            
+            # Try to parse as JSON, if it fails, return the raw response
+            try:
+                analysis = json.loads(content)
+                return analysis
+            except json.JSONDecodeError:
+                # If JSON parsing fails, return a structured response with the raw content
+                return {
+                    "error": "Failed to parse JSON response",
+                    "raw_response": content,
+                    "investors": [],
+                    "competitors": [],
+                    "market_insights": "See raw response above"
+                }
+                
+        except Exception as e:
+            return {
+                "error": f"API call failed: {str(e)}",
+                "investors": [],
+                "competitors": [],
+                "market_insights": ""
+            }
+    
+    def get_investors_summary(self, analysis):
+        """Extract and format investors information from analysis."""
+        if "investors" in analysis and analysis["investors"]:
+            return analysis["investors"]
+        return []
+    
+    def get_competitors_summary(self, analysis):
+        """Extract and format competitors information from analysis."""
+        if "competitors" in analysis and analysis["competitors"]:
+            return analysis["competitors"]
+        return []
+    
+    def get_market_insights(self, analysis):
+        """Extract market insights from analysis."""
+        return analysis.get("market_insights", "No market insights available.")
+
