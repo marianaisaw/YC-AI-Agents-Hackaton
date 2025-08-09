@@ -166,3 +166,125 @@ Return ONLY a JSON array with 12 items in the specified order. Avoid duplicates.
 }
 
 
+/**
+ * Generate comprehensive market research report using Anthropic Claude API
+ * Returns a structured market research report with analysis and recommendations
+ */
+export async function generateMarketResearchWithAnthropic({ profile, problemStatement, userAnswers, apiKey }) {
+  if (!apiKey) throw new Error('Missing Anthropic API key')
+
+  const system = `You are a senior McKinsey & Company consultant specializing in market intelligence and strategic analysis. Generate a world-class, C-suite executive market research report that would be presented to Fortune 500 CEOs and board members.
+
+Your analysis must be:
+- PROFESSIONAL: Use McKinsey-level business language and frameworks
+- DATA-DRIVEN: Include specific market metrics, growth rates, and projections
+- STRATEGIC: Provide actionable insights for executive decision-making
+- COMPREHENSIVE: Cover all critical market dimensions with depth
+- VISUAL-READY: Structure content for executive presentation format
+
+Analysis Framework:
+- Market sizing with TAM/SAM/SOM methodology
+- Porter's Five Forces analysis
+- Customer segmentation and journey mapping
+- Competitive positioning matrix
+- Risk assessment and mitigation strategies
+- Strategic roadmap with clear milestones
+
+Return ONLY valid JSON with this exact structure:
+{
+  "executive_summary": "Executive-level 3-4 sentence summary with key market insights, growth potential, and strategic implications. Use specific numbers and percentages where possible.",
+  "market_analysis": {
+    "market_size": "Detailed market size analysis using TAM/SAM/SOM framework. Include specific numbers, growth rates (CAGR), and market projections. Example: 'Global market valued at $X billion in 2024, projected to reach $Y billion by 2029 (CAGR: Z%)'",
+    "industry_trends": "3-4 key industry megatrends with specific examples and impact analysis. Include technological, regulatory, and consumer behavior shifts.",
+    "market_segmentation": "Detailed market segmentation with specific demographics, psychographics, and behavioral patterns. Include size estimates for each segment."
+  },
+  "competitive_landscape": {
+    "key_competitors": "Strategic analysis of top 3-5 competitors with their market positioning, strengths, weaknesses, and market share estimates.",
+    "competitive_advantages": "Your startup's unique competitive advantages and differentiation strategy. Include specific capabilities and market positioning.",
+    "market_share": "Current market share dynamics, competitive positioning matrix, and market share capture opportunities with specific targets."
+  },
+  "customer_insights": {
+    "target_customers": "Primary and secondary target customer segments with detailed personas, including demographics, psychographics, and buying behavior patterns.",
+    "pain_points": "3-4 specific customer pain points with impact assessment and urgency levels. Include quantifiable impact metrics where possible.",
+    "behavior": "Customer journey analysis, decision-making patterns, and key behavioral drivers. Include specific examples and data points."
+  },
+  "market_opportunity": {
+    "market_gaps": "Identified market gaps and white space opportunities with specific examples and market size estimates for each opportunity.",
+    "revenue_potential": "Detailed revenue potential analysis with market penetration scenarios, pricing strategies, and 3-5 year revenue projections.",
+    "entry_barriers": "Market entry barriers and challenges with specific mitigation strategies and competitive moat development recommendations."
+  },
+  "recommendations": {
+    "strategic": "3-4 strategic recommendations for market entry and growth with specific action items and expected outcomes.",
+    "implementation": "90-day implementation roadmap with key milestones, resource requirements, and success metrics.",
+    "risk_mitigation": "Top 3-4 risk factors with probability assessment, impact analysis, and specific mitigation strategies."
+  },
+  "conclusion": "Strategic conclusion with 3 key executive takeaways, market opportunity summary, and next steps for leadership team."
+}`
+
+  const prompt = `Startup Profile Context:
+${JSON.stringify({
+  startupName: profile?.startupName || 'The Startup',
+  brandTone: profile?.brandTone || 'professional and clear',
+  problem: profile?.problem || '',
+  solution: profile?.solution || '',
+  linkedin: profile?.linkedin || '',
+  launchWeeks: profile?.launchWeeks || '',
+  milestones: profile?.milestones || '',
+  notes: profile?.notes || ''
+}, null, 2)}
+
+Problem Statement:
+${problemStatement}
+
+Generate a comprehensive, McKinsey-quality market intelligence report following the specified JSON structure. 
+
+Key Requirements:
+1. Use the startup profile context to create highly specific, tailored insights
+2. Apply professional consulting frameworks (TAM/SAM/SOM, Porter's Five Forces, etc.)
+3. Include specific market metrics, growth projections, and competitive analysis
+4. Provide actionable strategic recommendations for C-suite executives
+5. Use industry-standard terminology and professional business language
+6. Focus on quantifiable insights and measurable outcomes
+
+This report will be presented to investors and executive leadership, so ensure it meets Fortune 500 consulting standards.`
+
+  const url = (import.meta.env.DEV ? '/anthropic' : 'https://api.anthropic.com') + '/v1/messages'
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true',
+    },
+    body: JSON.stringify({
+      model: DEFAULT_MODEL,
+      max_tokens: 3000,
+      system,
+      messages: [
+        { role: 'user', content: prompt },
+      ],
+    }),
+  })
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => '')
+    throw new Error(`Anthropic error ${res.status}: ${text}`)
+  }
+
+  const data = await res.json()
+  const text = data?.content?.[0]?.text ?? ''
+  try {
+    const parsed = JSON.parse(text)
+    if (typeof parsed !== 'object') throw new Error('Expected object')
+    return parsed
+  } catch {
+    const match = text.match(/\{[\s\S]*\}/)
+    if (match) {
+      try { return JSON.parse(match[0]) } catch {}
+    }
+    throw new Error('Model did not return valid JSON')
+  }
+}
+
+

@@ -1,75 +1,137 @@
-# React + Vite
+# GlowUp - AI-Powered Startup Growth Platform
 
+A comprehensive React application that helps startups generate pitch decks, market research, investor connections, and content strategies using AI.
 
-I am write:
+## 🚀 Features
 
+- **Startup Profile Management**: Comprehensive startup information collection
+- **AI-Generated Pitch Decks**: Professional pitch deck creation with Claude AI
+- **Market Research Reports**: Detailed market analysis and competitive intelligence
+- **Investor Matching**: Curated investor recommendations based on startup profile
+- **Content Calendar**: Strategic social media content planning
+- **Branding Tools**: Name generation and brand development
 
- {active === 'profile' && (
-            <div className="glass rounded-2xl p-6 md:p-8">
-              <div className="text-xl mb-4" style={{fontFamily:'Space Grotesk, ui-sans-serif, system-ui'}}>Startup profile</div>
-              <div className="grid md:grid-cols-2 gap-4 text-sm">
-                <Field label="Startup name" value={profile.startupName || '—'} />
-                <Field label="Brand tone" value={profile.brandTone || '—'} />
-                <Field label="LinkedIn" value={profile.linkedin || '—'} />
-                <Field label="Problem" value={profile.problem || '—'} />
-                <Field label="Solution" value={profile.solution || '—'} />
-                <Field label="Launch timeframe" value={profile.launchWeeks ? `${profile.launchWeeks} weeks` : '—'} />
-                <Field label="Milestones" value={profile.milestones || '—'} full />
-                <Field label="Extra notes" value={profile.notes || '—'} full />
-              </div>
-            </div>
-          )}
+## 🛠️ Tech Stack
 
-
-          
-Guys, this is general information about the tech stack for the frontend:
-
-### Tech stack overview
 - **Runtime/UI**: React 19 (`react`, `react-dom`) with `StrictMode`
 - **Routing**: React Router v7 (`BrowserRouter`, `Routes`, `Route`, `Navigate`)
 - **Build tool**: Vite 7 with `@vitejs/plugin-react` (fast dev server, ESM, HMR)
 - **Styling**: Tailwind CSS v4 (utility-first) + PostCSS; custom design tokens in `src/index.css`
-- **Animation**: Framer Motion (available; integrate in components as needed)
+- **Animation**: Framer Motion for smooth UI interactions
+- **AI Integration**: Anthropic Claude API for content generation
 
-### How it fits together
-- **Entry**: `index.html` mounts `#root`; `src/main.jsx` renders `<App />` inside `StrictMode`.
-- **Routing**: `src/App.jsx` defines routes:
-  - `/` → `Landing`
-  - `/start` → `Onboarding`
-  - `/creating` → `Loading`
-  - `/app/*` → `Dashboard`
-  - fallback → redirect to `/start`
-- **Layout**: `src/components/AppShell.jsx` provides header/nav/footer and backdrop effects; pages render as children inside this shell.
-- **Styling**: `tailwind.config.js` scans `index.html` and all files under `src/`; `src/index.css` imports Tailwind and defines tokens (colors, gradients) plus utility classes like `.btn-primary`, `.glass`, `.input`.
-- **Project type**: SPA, suitable for static hosting (Vercel/Netlify/GitHub Pages). No server-side code in this repo.
+## 🔑 Environment Setup
 
-### Dev and build
-- **Start dev server**:
-  ```bash
-  npm run dev
-  ```
-- **Production build**:
-  ```bash
-  npm run build
-  ```
-- **Preview production build locally**:
-  ```bash
-  npm run preview
-  ```
+This project requires an Anthropic API key to function. Follow these steps to set up your environment:
 
-### Extending
-- **Animations**: Use `framer-motion` (`motion.div`, variants) for interactive UI in pages/components.
-- **State/data**: Currently no global state lib; use React state/hooks or add one if needed.
-- **Styling**: Add utilities or component classes in `src/index.css`; update `tailwind.config.js` if you add new content paths.
+1. **Get an API Key**: Visit [Anthropic Console](https://console.anthropic.com/) to obtain your API key
 
-- Pushed to `https://github.com/EtienneLefranc/YCagenthackaton` on `main`.
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+2. **Create Environment File**: Copy the example environment file:
+   ```bash
+   cp .env.example .env
+   ```
 
-Currently, two official plugins are available:
+3. **Add Your API Key**: Edit `.env` and replace the placeholder with your actual API key:
+   ```bash
+   VITE_ANTHROPIC_API_KEY=your_actual_api_key_here
+   ```
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**⚠️ Security Note**: The `.env` file is already in `.gitignore` to prevent accidentally committing API keys. Never commit your actual API keys to version control.
 
-## Expanding the ESLint configuration
+## 🏗️ Project Structure
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Application Architecture
+- **Entry Point**: `index.html` mounts `#root`; `src/main.jsx` renders `<App />` inside `StrictMode`
+- **Routing**: `src/App.jsx` defines the application routes:
+  - `/` → `Landing` (Welcome page)
+  - `/start` → `Onboarding` (Startup profile setup)
+  - `/creating` → `Loading` (Profile processing)
+  - `/app/*` → `Dashboard` (Main application interface)
+  - Fallback → redirect to `/start`
+- **Layout System**: `src/components/AppShell.jsx` provides consistent header/nav/footer and backdrop effects
+- **Styling System**: Tailwind CSS v4 with custom design tokens and utility classes
+- **Project Type**: Single Page Application (SPA), suitable for static hosting platforms
+
+## 🚀 Development
+
+### Prerequisites
+- Node.js 18+ and npm
+- Anthropic API key (see Environment Setup above)
+
+### Quick Start
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/EtienneLefranc/YCagenthackaton.git
+   cd YCagenthackaton
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables** (see Environment Setup above)
+
+4. **Start development server**:
+   ```bash
+   npm run dev
+   ```
+
+### Available Scripts
+- **Development**: `npm run dev` - Start development server with hot reload
+- **Build**: `npm run build` - Create production build
+- **Preview**: `npm run preview` - Preview production build locally
+- **Lint**: `npm run lint` - Run ESLint for code quality
+
+## 🔧 Customization & Extension
+
+### Adding New Features
+- **Animations**: Use `framer-motion` (`motion.div`, variants) for interactive UI components
+- **State Management**: Currently uses React hooks; add global state management (Redux, Zustand) if needed
+- **Styling**: Extend utilities in `src/index.css`; update `tailwind.config.js` for new content paths
+- **AI Integration**: Add new AI services by extending the `src/lib/` directory
+
+### Component Architecture
+- **Pages**: Add new routes in `src/pages/` and update routing in `App.jsx`
+- **Components**: Reusable UI components in `src/components/`
+- **Utilities**: Business logic and API calls in `src/lib/`
+
+## 📚 API Integration
+
+This project integrates with the Anthropic Claude API for AI-powered content generation. The integration is handled through:
+
+- **API Client**: `src/lib/anthropic.js` - Handles all Anthropic API calls
+- **Environment Variables**: Secure API key management via `.env` files
+- **Development Proxy**: Vite dev server proxies API calls to avoid CORS issues
+
+## 🚀 Deployment
+
+This SPA can be deployed to any static hosting platform:
+
+- **Vercel**: Zero-config deployment with automatic builds
+- **Netlify**: Drag-and-drop deployment with form handling
+- **GitHub Pages**: Free hosting for open source projects
+- **AWS S3 + CloudFront**: Enterprise-grade static hosting
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## 🙏 Acknowledgments
+
+- Built with React 19 and Vite 7
+- AI-powered by Anthropic Claude
+- Styled with Tailwind CSS
+- Animations powered by Framer Motion
+
+---
+
+**Repository**: [https://github.com/EtienneLefranc/YCagenthackaton](https://github.com/EtienneLefranc/YCagenthackaton)
