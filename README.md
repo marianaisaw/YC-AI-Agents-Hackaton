@@ -28,33 +28,7 @@ Guys, this is general information about the tech stack for the frontend:
 - **Styling**: Tailwind CSS v4 (utility-first) + PostCSS; custom design tokens in `src/index.css`
 - **Animation**: Framer Motion (available; integrate in components as needed)
 
-### How it fits together
 
-- **Entry**: `index.html` mounts `#root`; `src/main.jsx` renders `<App />` inside `StrictMode`.
-- **Routing**: `src/App.jsx` defines routes:
-  - `/` → `Landing`
-  - `/start` → `Onboarding`
-  - `/creating` → `Loading`
-  - `/app/*` → `Dashboard`
-  - fallback → redirect to `/start`
-- **Layout**: `src/components/AppShell.jsx` provides header/nav/footer and backdrop effects; pages render as children inside this shell.
-- **Styling**: `tailwind.config.js` scans `index.html` and all files under `src/`; `src/index.css` imports Tailwind and defines tokens (colors, gradients) plus utility classes like `.btn-primary`, `.glass`, `.input`.
-- **Project type**: SPA, suitable for static hosting (Vercel/Netlify/GitHub Pages). No server-side code in this repo.
-
-### Dev and build
-
-- **Start dev server**:
-  ```bash
-  npm run dev
-  ```
-- **Production build**:
-  ```bash
-  npm run build
-  ```
-- **Preview production build locally**:
-  ```bash
-  npm run preview
-  ```
 
 
 
