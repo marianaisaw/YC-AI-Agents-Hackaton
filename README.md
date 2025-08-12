@@ -186,7 +186,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Ready to give your startup a GlowUp?** [Get started now](https://glowup.app](https://glowup-nhvac2mwr-marianas-projects-19ba8abd.vercel.app/))
+**Ready to give your startup a GlowUp?** [Get started now](https://glowup-nhvac2mwr-marianas-projects-19ba8abd.vercel.app/)
 
 ---
 
