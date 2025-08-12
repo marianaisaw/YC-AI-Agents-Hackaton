@@ -56,19 +56,7 @@ Guys, this is general information about the tech stack for the frontend:
   npm run preview
   ```
 
-### Extending
 
-- **Animations**: Use `framer-motion` (`motion.div`, variants) for interactive UI in pages/components.
-- **State/data**: Currently no global state lib; use React state/hooks or add one if needed.
-- **Styling**: Add utilities or component classes in `src/index.css`; update `tailwind.config.js` if you add new content paths.
-
-- Pushed to `https://github.com/EtienneLefranc/YCagenthackaton` on `main`.
-  This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
 ## Expanding the ESLint configuration
 
