@@ -1,5 +1,7 @@
 # 🚀 GlowUp — Your Pocket MBA for Tech Founders
 
+<img width="2855" height="1313" alt="67572A90-5FCB-4930-801C-3DD2083631BA" src="https://github.com/user-attachments/assets/56534dce-83f5-4b14-9e29-e18fbc4fec3c" />
+
 > **Launch faster with an AI operator that automates your startup launch workflow**
 
 GlowUp is the ultimate companion for technical founders who want to ship faster and smarter. Think of it as having a pocket MBA that handles everything from landing page generation to investor connections, market analysis, and pitch deck creation.
